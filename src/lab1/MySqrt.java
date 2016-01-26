@@ -1,5 +1,8 @@
 package lab1;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
  * @author Jonathan and Amar
  * @version 1.0
@@ -103,7 +106,7 @@ public class MySqrt {
     }
 
     public static void main(String[] args) {
-        System.out.println("Test of mySqrtLoop:");
+        System.out.println("Test av mySqrtLoop:");
         System.out.println("Svar: " + mySqrtLoop(100, 0.000001));
         System.out.println("Svar: " + mySqrtLoop(0, 0.000001));
         System.out.println("Svar: " + mySqrtLoop(-20, 0.000001));
@@ -112,7 +115,7 @@ public class MySqrt {
 
         System.out.println();
 
-        System.out.println("Test of mySqrtRecurse:");
+        System.out.println("Test av mySqrtRecurse:");
         System.out.println("Svar: " + mySqrtRecurse(100, 0.000001));
         System.out.println("Svar: " + mySqrtRecurse(0, 0.000001));
         System.out.println("Svar: " + mySqrtRecurse(-20, 0.000001));

@@ -1,3 +1,4 @@
+package lab1;
 
 public final class MaxSum {
 	// globala, lagrar start och slut på sekvensen
