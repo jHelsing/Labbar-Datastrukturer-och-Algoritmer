@@ -27,10 +27,6 @@ public class DLList<E> {
     @Override
     public int compareTo(Object o) {
       Node n = (Node) o;
-      //if(this.elt.equals(n.elt))
-      //  return 0;
-      // Compare the different points to calculate the value.
-      // First we calculate the value for this object.
       Double x1 = (Double) this.prev.prev.elt;
       Double y1 = (Double) this.prev.elt;
       Double x = (Double) this.elt;
