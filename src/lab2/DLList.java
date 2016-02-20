@@ -2,7 +2,7 @@
 /** Doubly-linked list with user access to nodes
  */
 public class DLList<E> {
-  public class Node implements Comparable {
+  public class Node {
     /** The contents of the node is public */
     public E elt;
 
@@ -22,37 +22,6 @@ public class DLList<E> {
 
     public Node getPrev() {
       return prev;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-      Node n = (Node) o;
-      Double x1 = (Double) this.prev.prev.elt;
-      Double y1 = (Double) this.prev.elt;
-      Double x = (Double) this.elt;
-      Double y = (Double) this.next.elt;
-      Double x2 = (Double) this.next.next.elt;
-      Double y2 = (Double) this.next.next.next.elt;
-
-      Double l1 = Math.sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1));
-      Double l2 = Math.sqrt((x2-x)*(x2-x) + (y2-y)*(y2-y));
-      Double l3 = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
-      Double result1 = l1+l2-l3;
-
-      // Calculate the value for the parameter object.
-      x1 = (Double) n.prev.prev.elt;
-      y1 = (Double) n.prev.elt;
-      x = (Double) n.elt;
-      y = (Double) n.next.elt;
-      x2 = (Double) n.next.next.elt;
-      y2 = (Double) n.next.next.next.elt;
-      l1 = Math.sqrt((x-x1)*(x-x1) + (y-y1)*(y-y1));
-      l2 = Math.sqrt((x2-x)*(x2-x) + (y2-y)*(y2-y));
-      l3 = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
-      Double result2 = l1+l2-l3;
-      // Compare these 2 value and return the result
-
-      return result1.compareTo(result2);
     }
   }
   
@@ -149,7 +118,7 @@ public class DLList<E> {
   public void remove(Node l) {
     if(l == first) {
       if(first == last)
-        first = null;
+        first = last = null;
       else {
         first = first.getNext();
       }
