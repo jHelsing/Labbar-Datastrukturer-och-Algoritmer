@@ -143,31 +143,33 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
             size--;
             return true;
         } else {
-            Node minSubNode = nodeToRemove.getRightChild();
-            while(minSubNode.getLeftChild() != null) {
-                minSubNode = minSubNode.getLeftChild();
+            // Find the largest node were the right child is null in the left child subtree of nodeToRemove.
+            // place the right child subtree of nodeToRemove as the right child of the node you found.
+
+            Node currentNode = nodeToRemove.getLeftChild();
+            while (currentNode.getRightChild() != null) {
+                System.out.println("remove first loop");
+                currentNode = currentNode.getRightChild();
             }
-            if(minSubNode.getParent() != nodeToRemove) {
-                if(minSubNode.getParent() == null)
-                    root = minSubNode.getRightChild();
-                else if(minSubNode == minSubNode.getParent().getRightChild())
-                    minSubNode.getLeftChild().setRightChild(minSubNode.getRightChild());
-                else
-                    minSubNode.getParent().setLeftChild(minSubNode.getRightChild());
-                if(minSubNode.getRightChild() != null) minSubNode.getRightChild().setParent(minSubNode.getParent());
-                minSubNode.setRightChild(nodeToRemove.getRightChild());
-                minSubNode.getRightChild().setParent(minSubNode);
+            // currentNode will be the new root.
+            Node leftSubRoot = nodeToRemove.getLeftChild();
+            Node rightSubRoot = nodeToRemove.getRightChild();
+
+            root = currentNode;
+            currentNode.getParent().setRightChild(null);
+            currentNode.setParent(null);
+            root.setRightChild(rightSubRoot);
+            rightSubRoot.setParent(root);
+
+            // Find the smallest value in the new tree. (Search for the left-most node with a null left child).
+            // Place the leftSubTree there.
+            System.out.println("remove 2nd loop");
+            while(currentNode.getLeftChild() != null) {
+                currentNode = currentNode.getLeftChild();
             }
-            if(nodeToRemove.getParent() == null)
-                root = minSubNode;
-            else if(nodeToRemove == nodeToRemove.getLeftChild().getLeftChild())
-                nodeToRemove.getParent().setLeftChild(minSubNode);
-            else
-                nodeToRemove.getParent().setRightChild(minSubNode);
-            if (minSubNode != null)
-                minSubNode.setParent(nodeToRemove.getParent());
-            minSubNode.setLeftChild(nodeToRemove.getLeftChild());
-            minSubNode.getLeftChild().setParent(minSubNode);
+            // currentNode is now the smallest node in the tree!
+            currentNode.setLeftChild(leftSubRoot);
+            leftSubRoot.setParent(currentNode);
             size--;
             return true;
         }
@@ -211,7 +213,7 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
         }
 
         Node currentNode = root;
-        System.out.println("TEST SEARCH NODE");
+        System.out.println("SEARCH NODE");
         while(currentNode.elt.compareTo(x) != 0 )  {
             if(currentNode.elt.compareTo(x) < 0) {
                 if (currentNode.getRightChild() == null)
