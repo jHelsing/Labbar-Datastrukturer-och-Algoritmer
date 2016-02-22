@@ -8,7 +8,7 @@ package lab3;
  */
 public class SortedLinkedListSet<E extends Comparable<? super E>> implements SimpleSet {
 
-    public class Node {
+    private class Node {
         /**
          * The contents of the node is public
          */
