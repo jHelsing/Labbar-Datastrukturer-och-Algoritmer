@@ -1,6 +1,5 @@
 package lab3;
 
-import com.sun.tools.corba.se.idl.constExpr.Not;
 
 /**
  * @author Jonathan and Amar
@@ -9,9 +8,7 @@ import com.sun.tools.corba.se.idl.constExpr.Not;
 public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet {
 
     private class Node {
-        /**
-         * The contents of the node is public
-         */
+
         private Comparable elt;
 
         private Node leftChild, rightChild, parent;
@@ -37,25 +34,6 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
             return rightChild;
         }
 
-        public Comparable getElt() {
-            return elt;
-        }
-
-        public void setElt(Comparable c) {
-            elt = c;
-        }
-
-        public void setParent(Node parent) {
-            this.parent = parent;
-        }
-
-        public void setLeftChild(Node child) {
-            this.leftChild = child;
-        }
-
-        public void setRightChild(Node child) {
-            this.rightChild = child;
-        }
     }
 
     private int size;
@@ -80,40 +58,42 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
             return true;
         }
 
-        if(!contains(x)) {
-            Node currentNode = root;
+        Node currentNode = root;
 
-            while (currentNode != null) {
-                if(currentNode.elt.compareTo(x) < 0) {
-                    // We are looking to insert the new to the right of the current node.
-                    // If the right child is null we can insert the new node there.
-                    // Otherwise we'll just update the current node to be the right child
-                    if(currentNode.getRightChild() == null) {
-                        Node node = new Node(x);
-                        currentNode.setRightChild(node);
-                        node.setParent(currentNode);
-                        splay(node);
-                        size++;
-                        return true;
-                    }
-                    currentNode = currentNode.getRightChild();
-                } else if(currentNode.elt.compareTo(x) > 0) {
-                    // We are looking to insert the new node to the left of the current node.
-                    // If the left child is null we can insert the new node there.
-                    // Otherwise we'll just update the current node to be the left child.
-                    if(currentNode.getLeftChild() == null) {
-                        Node node = new Node(x);
-                        currentNode.setLeftChild(node);
-                        node.setParent(currentNode);
-                        splay(node);
-                        size++;
-                        return true;
-                    }
-                    currentNode = currentNode.getLeftChild();
+        while (currentNode != null) {
+            if(currentNode.elt.compareTo(x) < 0) {
+
+                // We are looking to insert the new to the right of the current node.
+                // If the right child is null we can insert the new node there.
+                // Otherwise we'll just update the current node to be the right child
+                if(currentNode.rightChild == null) {
+                    Node node = new Node(x);
+                    currentNode.rightChild = node;
+                    node.parent = currentNode;
+                    splay(node);
+                    size++;
+                    return true;
                 }
-
+                currentNode = currentNode.rightChild;
+            } else if(currentNode.elt.compareTo(x) > 0) {
+                // We are looking to insert the new node to the left of the current node.
+                // If the left child is null we can insert the new node there.
+                // Otherwise we'll just update the current node to be the left child.
+                if(currentNode.leftChild == null) {
+                    Node node = new Node(x);
+                    currentNode.leftChild = node;
+                    node.parent = currentNode;
+                    splay(node);
+                    size++;
+                    return true;
+                }
+                currentNode = currentNode.leftChild;
+            } else {
+                return false;
             }
+
         }
+
         return false;
     }
 
@@ -126,51 +106,60 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
         if(nodeToRemove == null) {
             return false;
         }
-
+        printTree();
+        System.out.println("Efter splay:");
         splay(nodeToRemove);
 
-
-        if(nodeToRemove.getLeftChild() == null) {
-            // We can easily just set the right child of the nodeToRemove to root.
-            root = nodeToRemove.getRightChild();
-            root.setParent(null);
+        if(size() == 1){
+            root = null;
             size--;
             return true;
-        } else if(nodeToRemove.getRightChild() == null) {
+        } else if(nodeToRemove.leftChild == null && nodeToRemove.rightChild != null) {
+            // We can easily just set the right child of the nodeToRemove to root.
+            root = nodeToRemove.rightChild;
+            root.parent = null;
+            size--;
+            printTree();
+            return true;
+        } else if(nodeToRemove.rightChild == null) {
             // We can easily just set the left child of the nodeToRemove to root.
-            root = nodeToRemove.getLeftChild();
-            root.setParent(null);
+            root = nodeToRemove.leftChild;
+            root.parent = null;
             size--;
             return true;
         } else {
             // Find the largest node were the right child is null in the left child subtree of nodeToRemove.
             // place the right child subtree of nodeToRemove as the right child of the node you found.
 
-            Node currentNode = nodeToRemove.getLeftChild();
-            while (currentNode.getRightChild() != null) {
+            Node currentNode = nodeToRemove.leftChild;
+            while (currentNode.rightChild != null) {
                 System.out.println("remove first loop");
-                currentNode = currentNode.getRightChild();
+                currentNode = currentNode.rightChild;
             }
             // currentNode will be the new root.
-            Node leftSubRoot = nodeToRemove.getLeftChild();
-            Node rightSubRoot = nodeToRemove.getRightChild();
+            Node leftSubRoot = nodeToRemove.leftChild;
+            Node rightSubRoot = nodeToRemove.rightChild;
 
             root = currentNode;
-            currentNode.getParent().setRightChild(null);
-            currentNode.setParent(null);
-            root.setRightChild(rightSubRoot);
-            rightSubRoot.setParent(root);
+            root.parent.rightChild = null;
+            root.parent = null;
+            root.rightChild = rightSubRoot;
+            rightSubRoot.parent = root;
 
             // Find the smallest value in the new tree. (Search for the left-most node with a null left child).
             // Place the leftSubTree there.
             System.out.println("remove 2nd loop");
-            while(currentNode.getLeftChild() != null) {
-                currentNode = currentNode.getLeftChild();
+            while(currentNode.leftChild != null) {
+                System.out.print(" Value: " + currentNode.elt.toString() + " ");
+                currentNode = currentNode.leftChild;
             }
             // currentNode is now the smallest node in the tree!
-            currentNode.setLeftChild(leftSubRoot);
-            leftSubRoot.setParent(currentNode);
+            if(leftSubRoot != root) { // Var förut currentNode != root
+                currentNode.leftChild = leftSubRoot;
+                leftSubRoot.parent = currentNode;
+            }
             size--;
+            printTree();
             return true;
         }
     }
@@ -183,27 +172,24 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
         }
 
         Node currentNode = root;
-        System.out.println("CONTAINS LOOP");
         while(currentNode.elt.compareTo(x) != 0) {
-            if(currentNode == null) {
-                System.out.println("NULL");
-            }
             if(currentNode.elt.compareTo(x) < 0) {
                 // The object we are looking for is bigger than the current node. We should look at
                 // the right child of the current node.
-                if (currentNode.getRightChild() == null) {
+                if (currentNode.rightChild == null) {
                     return false;
                 }
-                currentNode = currentNode.getRightChild();
+                currentNode = currentNode.rightChild;
             } else if(currentNode.elt.compareTo(x) > 0) {
                 // The object we are looking for is smaller than the current node. We should look at
                 // the left child of the current node.
-                if (currentNode.getLeftChild() == null) {
+                if (currentNode.leftChild == null) {
                     return false;
                 }
-                currentNode = currentNode.getLeftChild();
+                currentNode = currentNode.leftChild;
             }
         }
+        splay(currentNode);
         return true;
     }
 
@@ -216,14 +202,14 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
         System.out.println("SEARCH NODE");
         while(currentNode.elt.compareTo(x) != 0 )  {
             if(currentNode.elt.compareTo(x) < 0) {
-                if (currentNode.getRightChild() == null)
+                if (currentNode.rightChild == null)
                     return null;
-                currentNode = currentNode.getRightChild();
+                currentNode = currentNode.rightChild;
 
             } else if (currentNode.elt.compareTo(x) > 0) {
-                if (currentNode.getLeftChild() == null)
+                if (currentNode.leftChild == null)
                     return null;
-                currentNode = currentNode.getLeftChild();
+                currentNode = currentNode.leftChild;
             }
         }
         return currentNode;
@@ -231,69 +217,87 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
 
     private void leftRotation(Node node) {
         // node is the parent of the node to be put in it's place.
-        Node b = node.getRightChild();
-        node.setRightChild(b.getLeftChild());
-        if(b.getLeftChild() != null)
-            b.getLeftChild().setParent(node);
-        b.setLeftChild(node);
+        Node b = node.rightChild;
+        node.rightChild = b.leftChild;
+        if(b.leftChild != null)
+            b.leftChild.parent = node;
+        b.leftChild = node;
 
-        b.setParent(node.getParent());
+        b.parent = node.parent;
         if(node != root) {
-            if(node.getParent().getLeftChild() == node)
-                b.getParent().setLeftChild(b);
+            if(node.parent.leftChild == node)
+                b.parent.leftChild = b;
             else
-                b.getParent().setRightChild(b);
+                b.parent.rightChild = b;
         } else
             root = b;
-        node.setParent(b);
+        node.parent = b;
     }
 
     private void rightRotation(Node node) {
-        Node a = node.getLeftChild();
-        node.setLeftChild(a.getRightChild());
-        if(a.getRightChild() != null)
-            a.getRightChild().setParent(node);
-        a.setRightChild(node);
+        Node a = node.leftChild;
+        node.leftChild = a.rightChild;
+        if(a.rightChild != null)
+            a.rightChild.parent = node;
+        a.rightChild = node;
 
-        a.setParent(node.getParent());
+        a.parent = node.parent;
         if(node != root) {
-            if(node.getParent().getRightChild() == node)
-                a.getParent().setRightChild(a);
+            if(node.parent.rightChild == node)
+                a.parent.rightChild = a;
             else
-                a.getParent().setLeftChild(a);
+                a.parent.leftChild = a;
         } else
             root = a;
-        node.setParent(a);
+        node.parent = a;
     }
 
     private void splay(Node node) {
         // node is the node that we should have as root.
         while (node != root) {
-            if (node.getParent() == root) {
-                if (root.getRightChild() == node)
-                    leftRotation(node.getParent());
+            if (node.parent == root) {
+                if (root.rightChild == node)
+                    leftRotation(node.parent);
                 else
-                    rightRotation(node.getParent());
-            } else if (node.getParent().getParent().getLeftChild() == node.getParent()
-                    && node.getParent().getLeftChild() == node) {
+                    rightRotation(node.parent);
+            } else if (node.parent.parent.leftChild == node.parent
+                    && node.parent.leftChild == node) {
                 // If right zig-zig should be done
-                rightRotation(node.getParent().getParent());
-                rightRotation(node.getParent());
-            } else if (node.getParent().getParent().getRightChild() == node.getParent()
-                    && node.getParent().getRightChild() == node) {
+                rightRotation(node.parent.parent);
+                rightRotation(node.parent);
+            } else if (node.parent.parent.rightChild == node.parent
+                    && node.parent.rightChild == node) {
                 // If left zig-zig should be done
-                leftRotation(node.getParent().getParent());
-                leftRotation(node.getParent());
-            } else if (node.getParent().getParent().getRightChild() == node.getParent()
-                    && node.getParent().getLeftChild() == node) {
+                leftRotation(node.parent.parent);
+                leftRotation(node.parent);
+            } else if (node.parent.parent.rightChild == node.parent
+                    && node.parent.leftChild == node) {
                 // if right zig-zag should be done
-                rightRotation(node.getParent());
-                leftRotation(node.getParent());
+                rightRotation(node.parent);
+                leftRotation(node.parent);
             } else {
                 // if left zig-zag should be done
-                leftRotation(node.getParent());
-                rightRotation(node.getParent());
+                leftRotation(node.parent);
+                rightRotation(node.parent);
             }
+        }
+    }
+
+    public void printTree() {
+        reverseInOrder(root, 0);
+    }
+
+    private void reverseInOrder(Node h, int indent) {
+        if (h != null) {
+            indent++;
+            reverseInOrder(h.rightChild, indent);
+
+            for (int i = 0; i < indent; i++) {
+                System.out.print("  ");
+            }
+            System.out.println(h.elt.toString());
+
+            reverseInOrder(h.leftChild, indent);
         }
     }
 
