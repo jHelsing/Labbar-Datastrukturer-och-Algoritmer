@@ -106,8 +106,6 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
         if(nodeToRemove == null) {
             return false;
         }
-        printTree();
-        System.out.println("Efter splay:");
         splay(nodeToRemove);
 
         if(size() == 1){
@@ -119,7 +117,6 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
             root = nodeToRemove.rightChild;
             root.parent = null;
             size--;
-            printTree();
             return true;
         } else if(nodeToRemove.rightChild == null) {
             // We can easily just set the left child of the nodeToRemove to root.
@@ -133,7 +130,6 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
 
             Node currentNode = nodeToRemove.leftChild;
             while (currentNode.rightChild != null) {
-                System.out.println("remove first loop");
                 currentNode = currentNode.rightChild;
             }
             // currentNode will be the new root.
@@ -148,18 +144,15 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
 
             // Find the smallest value in the new tree. (Search for the left-most node with a null left child).
             // Place the leftSubTree there.
-            System.out.println("remove 2nd loop");
             while(currentNode.leftChild != null) {
-                System.out.print(" Value: " + currentNode.elt.toString() + " ");
                 currentNode = currentNode.leftChild;
             }
             // currentNode is now the smallest node in the tree!
-            if(leftSubRoot != root) { // Var förut currentNode != root
+            if(leftSubRoot != root) {
                 currentNode.leftChild = leftSubRoot;
                 leftSubRoot.parent = currentNode;
             }
             size--;
-            printTree();
             return true;
         }
     }
@@ -199,7 +192,6 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
         }
 
         Node currentNode = root;
-        System.out.println("SEARCH NODE");
         while(currentNode.elt.compareTo(x) != 0 )  {
             if(currentNode.elt.compareTo(x) < 0) {
                 if (currentNode.rightChild == null)
@@ -280,24 +272,6 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
                 leftRotation(node.parent);
                 rightRotation(node.parent);
             }
-        }
-    }
-
-    public void printTree() {
-        reverseInOrder(root, 0);
-    }
-
-    private void reverseInOrder(Node h, int indent) {
-        if (h != null) {
-            indent++;
-            reverseInOrder(h.rightChild, indent);
-
-            for (int i = 0; i < indent; i++) {
-                System.out.print("  ");
-            }
-            System.out.println(h.elt.toString());
-
-            reverseInOrder(h.leftChild, indent);
         }
     }
 

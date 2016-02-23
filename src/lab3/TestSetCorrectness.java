@@ -50,7 +50,6 @@ public class TestSetCorrectness {
                 } else if(25 <= randomOperation && randomOperation < 50) {
                     // Test add method
                     Integer integer = r.nextInt(n4); // A random integer in the interval [0, n4)
-                    System.out.println("TEST ADD " + integer.toString());
                     operationsDone = operationsDone + "add(" + integer.toString() + ") ";
                     if(testSet.add(integer) != referenceSet.add(integer)) {
                         // If a inconsistency is found
@@ -61,7 +60,6 @@ public class TestSetCorrectness {
                 } else if(50 <= randomOperation && randomOperation < 75) {
                     // Test remove method
                     Integer integer = r.nextInt(n4); // A random integer in the interval [0, n4)
-                    System.out.println("TEST REMOVE " + integer.toString());
                     operationsDone = operationsDone + "remove(" + integer.toString() + ") ";
                     if(testSet.remove(integer) != referenceSet.remove(integer)) {
                         // If a inconsistency is found
@@ -72,7 +70,6 @@ public class TestSetCorrectness {
                 } else {
                     // Test contains method
                     Integer integer = r.nextInt(n4); // A random integer in the interval [0, n4)
-                    System.out.println("TEST CONTAINS " + integer.toString());
                     operationsDone = operationsDone + "contains(" + integer.toString() + ") ";
                     if(testSet.contains(integer) != referenceSet.contains(integer)) {
                         // If a inconsistency is found
