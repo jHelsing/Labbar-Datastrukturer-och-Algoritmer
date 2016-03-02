@@ -5,11 +5,11 @@ package lab3;
  * @author Jonathan and Amar
  * @version 0.5
  */
-public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet {
+public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet<E> {
 
     private class Node {
 
-        private Comparable elt;
+        private E elt;
 
         private Node leftChild, rightChild, parent;
 
@@ -17,7 +17,7 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
             this(null);
         }
 
-        Node(Comparable elt) {
+        Node(E elt) {
             this.elt = elt;
             leftChild = rightChild = parent = null;
         }
@@ -50,7 +50,7 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
     }
 
     @Override
-    public boolean add(Comparable x) {
+    public boolean add(E x) {
         if(size == 0) {
             // Tree is empty. Add root
             root = new Node(x);
@@ -98,7 +98,7 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
     }
 
     @Override
-    public boolean remove(Comparable x) {
+    public boolean remove(E x) {
         if(size == 0)
             return false;
 
@@ -158,7 +158,7 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
     }
 
     @Override
-    public boolean contains(Comparable x) {
+    public boolean contains(E x) {
         if(size() == 0) {
             // The tree is empty, it cannot contain x
             return false;
@@ -186,7 +186,7 @@ public class SplayTreeSet<E extends Comparable<? super E>> implements SimpleSet 
         return true;
     }
 
-    private Node searchNode(Comparable x) {
+    private Node searchNode(E x) {
         if(size() == 0) {
             return null;
         }

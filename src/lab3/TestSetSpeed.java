@@ -1,5 +1,5 @@
 package lab3;
-/*
+
 import java.util.Random;
 
 class TestSetSpeed {
@@ -58,4 +58,3 @@ class TestSetSpeed {
   System.out.println("time/operation: " + (double)(endTime - startTime) * 1e6 / (double)ops + "ns");
  }
 }
-*/

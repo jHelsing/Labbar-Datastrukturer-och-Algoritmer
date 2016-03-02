@@ -6,13 +6,13 @@ package lab3;
  * @author Jonathan and Amar.
  * @version 1.0
  */
-public class SortedLinkedListSet<E extends Comparable<? super E>> implements SimpleSet {
+public class SortedLinkedListSet<E extends Comparable<? super E>> implements SimpleSet<E> {
 
     private class Node {
         /**
          * The contents of the node is public
          */
-        public Comparable elt;
+        public E elt;
 
         protected Node prev, next;
 
@@ -20,7 +20,7 @@ public class SortedLinkedListSet<E extends Comparable<? super E>> implements Sim
             this(null);
         }
 
-        Node(Comparable elt) {
+        Node(E elt) {
             this.elt = elt;
             prev = next = null;
         }
@@ -49,7 +49,7 @@ public class SortedLinkedListSet<E extends Comparable<? super E>> implements Sim
     }
 
     @Override
-    public boolean add(Comparable x) {
+    public boolean add(E x) {
         if(this.size() == 0) {
             Node node = new Node(x);
             first = node;
@@ -101,7 +101,7 @@ public class SortedLinkedListSet<E extends Comparable<? super E>> implements Sim
     }
 
     @Override
-    public boolean remove(Comparable x) {
+    public boolean remove(E x) {
         if(this.size() == 0)
             return false;
 
@@ -145,7 +145,7 @@ public class SortedLinkedListSet<E extends Comparable<? super E>> implements Sim
     }
 
     @Override
-    public boolean contains(Comparable x) {
+    public boolean contains(E x) {
         if(this.size() == 0)
             return false;
 
