@@ -10,7 +10,11 @@ public class CompKruskalEdge<E extends Edge> implements Comparator<E> {
 
     @Override
     public int compare(E o1, E o2) {
-        
-        return 0;
+        if (o1.getWeight() > o2.getWeight())
+            return 1;
+        else if (o1.getWeight() < o2.getWeight())
+            return -1;
+        else
+            return 0;
     }
 }
