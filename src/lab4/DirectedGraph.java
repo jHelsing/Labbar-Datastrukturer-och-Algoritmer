@@ -2,6 +2,7 @@ package lab4;
 
 import java.awt.font.ImageGraphicAttribute;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
@@ -47,7 +48,6 @@ public class DirectedGraph<E extends Edge> {
                 queueHead = priorityQueue.poll();
             }
 
-
             // Every node in the graph is not connected
             if(queueHead == null)
                 return null;
@@ -67,18 +67,56 @@ public class DirectedGraph<E extends Edge> {
                 path.add(edge);
                 DijkstraObject obj = new DijkstraObject(edge.getDest(), path, queueHead.getWeight() + edge.getWeight());
                 priorityQueue.add(obj);
-
             }
-
-
-
         }
 
     }
 
     public Iterator<E> minimumSpanningTree() {
-        // TODO använd Kruskal's algorithm för detta
-        return null;
+        ArrayList<ArrayList<E>> kruskalEdgeList = new ArrayList<>(edgeList.size());
+        for(int i=0; i<edgeList.size(); i++)
+            kruskalEdgeList.add(new ArrayList<E>());
+
+        PriorityQueue<E> priorityQueue = new PriorityQueue<>(1, new CompKruskalEdge<E>());
+        for(int i=0; i<edgeList.size(); i++) {
+            ArrayList<E> tempList = edgeList.get(i);
+            for(int j=0;j<tempList.size(); j++)
+               priorityQueue.add(tempList.get(j));
+        }
+
+        while(true) {
+            E queueHead = priorityQueue.poll();
+            while(queueHead != null
+                    && kruskalEdgeList.get(queueHead.getSource()) == kruskalEdgeList.get(queueHead.getDest())) {
+                queueHead = priorityQueue.poll();
+            }
+
+            if(queueHead == null)
+                return kruskalEdgeList.get(0).iterator();
+
+            ArrayList<E> lk;
+            ArrayList<E> ll;
+
+            if(kruskalEdgeList.get(queueHead.getSource()).size() > kruskalEdgeList.get(queueHead.getDest()).size()) {
+                ll = kruskalEdgeList.get(queueHead.getSource());
+                lk = kruskalEdgeList.get(queueHead.getDest());
+            } else {
+                lk = kruskalEdgeList.get(queueHead.getSource());
+                ll = kruskalEdgeList.get(queueHead.getDest());
+            }
+
+            ll.add(queueHead);
+            for(int i=0; i<lk.size(); i++) {
+                ll.add(lk.get(i));
+                kruskalEdgeList.set(lk.get(i).getSource(), ll);
+                kruskalEdgeList.set(lk.get(i).getDest(), ll);
+            }
+
+            kruskalEdgeList.set(queueHead.getSource(), ll);
+            kruskalEdgeList.set(queueHead.getDest(), ll);
+
+        }
+
     }
 
     /**
