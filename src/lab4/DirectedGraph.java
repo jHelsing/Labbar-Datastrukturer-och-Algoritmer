@@ -1,8 +1,6 @@
 package lab4;
 
-import java.awt.font.ImageGraphicAttribute;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
@@ -77,6 +75,7 @@ public class DirectedGraph<E extends Edge> {
         for(int i=0; i<edgeList.size(); i++)
             kruskalEdgeList.add(new ArrayList<E>());
 
+        // Adds all edges to the PriorityQueue
         PriorityQueue<E> priorityQueue = new PriorityQueue<>(1, new CompKruskalEdge<E>());
         for(int i=0; i<edgeList.size(); i++) {
             ArrayList<E> tempList = edgeList.get(i);
@@ -86,11 +85,13 @@ public class DirectedGraph<E extends Edge> {
 
         while(true) {
             E queueHead = priorityQueue.poll();
+            // Find a new edge that does not create a cycle in the graph
             while(queueHead != null
                     && kruskalEdgeList.get(queueHead.getSource()) == kruskalEdgeList.get(queueHead.getDest())) {
                 queueHead = priorityQueue.poll();
             }
 
+            // No more edges in the PriorityQueue? We have our MST!
             if(queueHead == null)
                 return kruskalEdgeList.get(0).iterator();
 
@@ -105,6 +106,7 @@ public class DirectedGraph<E extends Edge> {
                 ll = kruskalEdgeList.get(queueHead.getDest());
             }
 
+            // Add all the edges to ll and make sure that all nodes points to this list of edges
             ll.add(queueHead);
             for(int i=0; i<lk.size(); i++) {
                 ll.add(lk.get(i));
